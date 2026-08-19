@@ -3,32 +3,42 @@ import type {
   TranslationsType,
 } from '../../assets/cardSets/Flashcards.type'
 
+import { useRef, useState } from 'react'
+
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { Draggable } from 'gsap/Draggable'
-import { useRef, useState } from 'react'
 
 gsap.registerPlugin(useGSAP, Draggable)
 
 type LayoutProps = {
   flashcard: FlashCardsType
   lang: keyof TranslationsType
+  isFront: boolean
   onResolve: (change: MLChange) => void // ML as in Mastery Level
 }
 
 type MLChange = 'up' | 'same' | 'down'
 
-const SWIP_THLESHOLD_X = 200
+const SWIP_THLESHOLD_X = 120
 const SWIP_THLESHOLD_Y = 100
 
 export const FlashcardsLayout = ({
   flashcard,
   lang,
+  isFront,
   onResolve,
 }: LayoutProps) => {
+  const containerRef = useRef<HTMLDivElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
   const draggableRef = useRef<Draggable | null>(null)
+  const onResolveRef = useRef(onResolve)
+
   const [isFlipped, setIsFlipped] = useState<boolean>(false)
+
+  useGSAP(() => {
+    onResolveRef.current = onResolve
+  }, [onResolve])
 
   const { contextSafe } = useGSAP(() => {
     // Draggable.create returns an array of Draggable instances, and the square brackets deconstruct to pull the first element.
@@ -57,6 +67,22 @@ export const FlashcardsLayout = ({
     draggableRef.current = instance
   }, [])
 
+  useGSAP(() => {
+    console.log("Hi! i'm ", flashcard.word, ' and my isFront is ', isFront)
+    gsap.set(containerRef.current, { zIndex: isFront ? 100 : 0 })
+
+    if (!isFront) {
+      gsap.set(containerRef.current, { scale: 0.85 })
+      draggableRef.current?.disable()
+    } else {
+      gsap.to(containerRef.current, {
+        scale: 1,
+        duration: 0.4,
+        ease: 'power2.inOut',
+      })
+    }
+  }, [isFront])
+
   const resolveSwipe = contextSafe(
     (levelChange: MLChange, dir: 'right' | 'left' | 'down') => {
       const flyTo = {
@@ -68,12 +94,13 @@ export const FlashcardsLayout = ({
         ...flyTo,
         duration: 0.4,
         ease: 'power1.out',
-        onComplete: () => onResolve(levelChange),
+        onComplete: () => onResolveRef.current(levelChange),
       })
     }
   )
 
   const handleFlip = contextSafe(() => {
+    if (!isFront) return
     gsap.to(cardRef.current, {
       rotationY: isFlipped ? 0 : 180,
       duration: 0.5,
@@ -86,9 +113,10 @@ export const FlashcardsLayout = ({
 
   return (
     <div
-      className="cursor-point h-110 w-80"
+      className={`cursor-point absolute h-110 w-80 ${!isFront ? 'pointer-events-none' : ''}`}
       style={{ perspective: 1000 }}
       onClick={handleFlip}
+      ref={containerRef}
     >
       <div
         className="relative h-full w-full"
@@ -96,8 +124,11 @@ export const FlashcardsLayout = ({
         ref={cardRef}
       >
         <div
-          className="absolute inset-0 flex flex-col items-center justify-center rounded-xl bg-amber-100"
-          style={{ backfaceVisibility: 'hidden' }}
+          className="absolute inset-0 flex flex-col items-center justify-center rounded-xl"
+          style={{
+            backfaceVisibility: 'hidden',
+            backgroundColor: isFront ? 'white' : 'whitesmoke',
+          }}
         >
           <h2 className="text-4xl font-normal text-amber-950">
             {flashcard.word}

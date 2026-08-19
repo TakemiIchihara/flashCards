@@ -1,3 +1,23 @@
+type FlashcardsLanguageCode = 'DE' | 'CN'
+
+export const LANGUAGE_CODE: FlashcardsLanguageCode[] = ['CN', 'DE']
+
+type LanguageList = {
+  id: keyof TranslationsType
+  label: string
+}
+
+export const LANGUAGE_LIST: LanguageList[] = [
+  {
+    id: 'DE',
+    label: 'German',
+  },
+  {
+    id: 'CN',
+    label: 'Chinese',
+  },
+]
+
 export type FlashCardsType = {
   word: string
   translations: TranslationsType

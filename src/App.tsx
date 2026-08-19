@@ -1,46 +1,25 @@
-import { useState } from 'react'
-import './App.css'
 import { FlashcardsRunner } from './sections/flashcards/Flashcards.runner'
-import type { TranslationsType } from './assets/cardSets/Flashcards.type'
-
-type LanguageList = {
-  id: keyof TranslationsType
-  label: string
-}
-const LANGUAGE_LIST: LanguageList[] = [
-  {
-    id: 'DE',
-    label: 'Germany',
-  },
-  {
-    id: 'CN',
-    label: 'Chinese',
-  },
-]
+import { NavBar } from './layout/NavBar/NavBar'
+import { Route, Routes } from 'react-router-dom'
+import { Home } from './sections/home/Home'
+import { LANGUAGE_CODE } from './assets/cardSets/Flashcards.type'
 
 function App() {
-  const [selectedLanguage, setSelectedLanguage] =
-    useState<keyof TranslationsType>()
-
-  if (selectedLanguage) {
-    return <FlashcardsRunner lang={selectedLanguage} />
-  }
-
   return (
-    <div className="h-dvh overflow-hidden">
-      <h1>Learning Languages is Fun :)</h1>
-      <ul>
-        {LANGUAGE_LIST.map((el) => (
-          <li>
-            <a
-              className="cursor-pointer"
-              onClick={() => setSelectedLanguage(el.id)}
-            >
-              {el.label}
-            </a>
-          </li>
-        ))}
-      </ul>
+    <div className="app-shell">
+      <NavBar />
+      {/* page-container */}
+      <div className="relative h-dvh w-screen">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          {LANGUAGE_CODE.map((langOption) => (
+            <Route
+              path={`/flashcards-${langOption}`}
+              element={<FlashcardsRunner lang={`${langOption}`} />}
+            />
+          ))}
+        </Routes>
+      </div>
     </div>
   )
 }
