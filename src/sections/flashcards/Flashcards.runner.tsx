@@ -1,15 +1,15 @@
 import { useState } from 'react'
 import { FlashcardsAll } from '../../assets/cardSets/Flashcards.master'
 import type {
+  FlashcardsLanguageCode,
   FlashCardsType,
-  TranslationsType,
 } from '../../assets/cardSets/Flashcards.type'
 import { FlashcardsLayout } from './Flashcards.layout'
 
 export const FlashcardsRunner = ({
   lang,
 }: {
-  lang: keyof TranslationsType
+  lang: FlashcardsLanguageCode
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0)
 

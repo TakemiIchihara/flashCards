@@ -1,22 +1,19 @@
-import { Link } from 'react-router-dom'
-import { LANGUAGE_LIST } from '../../assets/cardSets/Flashcards.type'
+import { LANGUAGE_CODE } from '@/assets/cardSets/Flashcards.type'
+import { HomeLayout } from './Home.layout'
 
 export const Home = () => {
+  // const containerRef = useRef<HTMLDivElement>(null)
+
   return (
-    <div className="grid h-full w-full grid-rows-[0.4fr_0.6fr] justify-center">
-      <h1 className="self-end text-2xl">Learning Languages is Fun :)</h1>
-      <ul className="flex flex-col gap-4 self-end pb-8">
-        {LANGUAGE_LIST.map((el) => (
-          <li className="rounded-full border-2 border-solid border-violet-700 text-2xl">
-            <Link
-              to={`/flashcards-${el.id}`}
-              className="flex h-fit w-full flex-col items-center justify-center py-6"
-            >
-              {el.label}
-            </Link>
-          </li>
-        ))}
-      </ul>
+    <div className="flex h-dvh w-screen snap-x snap-mandatory overflow-x-scroll">
+      {LANGUAGE_CODE.map((code) => (
+        <section
+          key={code}
+          className="h-dvh w-screen shrink-0 snap-end overflow-hidden"
+        >
+          <HomeLayout language={code} />
+        </section>
+      ))}
     </div>
   )
 }

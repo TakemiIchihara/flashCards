@@ -1,6 +1,6 @@
 import type {
+  FlashcardsLanguageCode,
   FlashCardsType,
-  TranslationsType,
 } from '../../assets/cardSets/Flashcards.type'
 
 import { useRef, useState } from 'react'
@@ -13,7 +13,7 @@ gsap.registerPlugin(useGSAP, Draggable)
 
 type LayoutProps = {
   flashcard: FlashCardsType
-  lang: keyof TranslationsType
+  lang: FlashcardsLanguageCode
   isFront: boolean
   onResolve: (change: MLChange) => void // ML as in Mastery Level
 }
@@ -68,7 +68,6 @@ export const FlashcardsLayout = ({
   }, [])
 
   useGSAP(() => {
-    console.log("Hi! i'm ", flashcard.word, ' and my isFront is ', isFront)
     gsap.set(containerRef.current, { zIndex: isFront ? 100 : 0 })
 
     if (!isFront) {

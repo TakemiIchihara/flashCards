@@ -1,22 +1,6 @@
-type FlashcardsLanguageCode = 'DE' | 'CN'
-
-export const LANGUAGE_CODE: FlashcardsLanguageCode[] = ['CN', 'DE']
-
-type LanguageList = {
-  id: keyof TranslationsType
-  label: string
-}
-
-export const LANGUAGE_LIST: LanguageList[] = [
-  {
-    id: 'DE',
-    label: 'German',
-  },
-  {
-    id: 'CN',
-    label: 'Chinese',
-  },
-]
+// when you want to create a type using the content of an array, define the array first and turn it into a type
+export const LANGUAGE_CODE = ['DE', 'CN', 'ALL'] as const
+export type FlashcardsLanguageCode = (typeof LANGUAGE_CODE)[number]
 
 export type FlashCardsType = {
   word: string
@@ -30,6 +14,7 @@ export type TranslationsType = {
   DE?: string
   CN?: string
   JP?: string
+  ALL?: string
 }
 
 export const CATEGORIES = {
