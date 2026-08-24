@@ -2,7 +2,12 @@ import { FlashcardsRunner } from './sections/flashcards/Flashcards.runner'
 import { NavBar } from './layout/NavBar/NavBar'
 import { Route, Routes } from 'react-router-dom'
 import { Home } from './sections/home/Home'
-import { LANGUAGE_CODE } from './assets/cardSets/Flashcards.type'
+import { LANGUAGE_OPTIONS } from './assets/cardSets/Flashcards.type'
+import {
+  FLASHCARDS,
+  matchCategory,
+  type CategoryType,
+} from './assets/cardSets/Flashcards.registry'
 
 function App() {
   return (
@@ -12,12 +17,19 @@ function App() {
       <div className="relative h-dvh w-screen">
         <Routes>
           <Route path="/" element={<Home />} />
-          {LANGUAGE_CODE.map((langOption) => (
-            <Route
-              path={`/flashcards-${langOption}`}
-              element={<FlashcardsRunner lang={`${langOption}`} />}
-            />
-          ))}
+          {LANGUAGE_OPTIONS.map((lang) =>
+            (Object.keys(FLASHCARDS) as CategoryType[]).map((category) => (
+              <Route
+                path={`/flashcards-${lang}/${category}`}
+                element={
+                  <FlashcardsRunner
+                    lang={`${lang}`}
+                    cards={matchCategory(category)}
+                  />
+                }
+              />
+            ))
+          )}
         </Routes>
       </div>
     </div>

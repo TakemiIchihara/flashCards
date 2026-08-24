@@ -1,4 +1,4 @@
-import { LANGUAGE_CODE } from '@/assets/cardSets/Flashcards.type'
+import { LANGUAGE_OPTIONS } from '@/assets/cardSets/Flashcards.type'
 import { HomeLayout } from './Home.layout'
 
 export const Home = () => {
@@ -6,12 +6,12 @@ export const Home = () => {
 
   return (
     <div className="flex h-dvh w-screen snap-x snap-mandatory overflow-x-scroll">
-      {LANGUAGE_CODE.map((code) => (
+      {LANGUAGE_OPTIONS.map((lang) => (
         <section
-          key={code}
+          key={lang}
           className="h-dvh w-screen shrink-0 snap-end overflow-hidden"
         >
-          <HomeLayout language={code} />
+          <HomeLayout lang={lang} />
         </section>
       ))}
     </div>

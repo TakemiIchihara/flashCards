@@ -8,12 +8,13 @@ import { useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { Draggable } from 'gsap/Draggable'
+import { speak } from '@/utils/speak'
 
 gsap.registerPlugin(useGSAP, Draggable)
 
 type LayoutProps = {
   flashcard: FlashCardsType
-  lang: FlashcardsLanguageCode
+  langCode: FlashcardsLanguageCode[]
   isFront: boolean
   onResolve: (change: MLChange) => void // ML as in Mastery Level
 }
@@ -25,7 +26,7 @@ const SWIP_THLESHOLD_Y = 100
 
 export const FlashcardsLayout = ({
   flashcard,
-  lang,
+  langCode,
   isFront,
   onResolve,
 }: LayoutProps) => {
@@ -114,13 +115,13 @@ export const FlashcardsLayout = ({
     <div
       className={`cursor-point absolute h-110 w-80 ${!isFront ? 'pointer-events-none' : ''}`}
       style={{ perspective: 1000 }}
-      onClick={handleFlip}
       ref={containerRef}
     >
       <div
         className="relative h-full w-full"
         style={{ transformStyle: 'preserve-3d' }}
         ref={cardRef}
+        onClick={handleFlip}
       >
         <div
           className="absolute inset-0 flex flex-col items-center justify-center rounded-xl"
@@ -140,10 +141,25 @@ export const FlashcardsLayout = ({
             transform: 'rotateY(180deg)',
           }}
         >
+          {langCode.map((code) => (
+            <>
+              {code === 'CN' && (
+                <small className="text-yellow-900">{flashcard.pinyin}</small>
+              )}
+              <h2 className="text-4xl font-extrabold text-amber-950">
+                {flashcard.translations[code]}
+              </h2>
+              <div>
+                <button
+                  onClick={() => speak(flashcard.translations[code], code)}
+                  className="cursor-pointer"
+                >
+                  pronounce 🗣️
+                </button>
+              </div>
+            </>
+          ))}
           {/* {card.translations.map((el) => (<h2 className="text-amber-950">{card.translations[el]}</h2>))} */}
-          <h2 className="text-4xl font-extrabold text-amber-950">
-            {flashcard.translations[lang]}
-          </h2>
         </div>
       </div>
     </div>

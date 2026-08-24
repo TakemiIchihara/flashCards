@@ -1,17 +1,21 @@
 import { useState } from 'react'
-import { FlashcardsAll } from '../../assets/cardSets/Flashcards.master'
-import type {
-  FlashcardsLanguageCode,
-  FlashCardsType,
+import { cardsHumanRelation } from '@/assets/cardSets/Flashcards.humanRelation'
+import {
+  LANGUAGE_CODE,
+  type FlashCardsType,
+  type LanguageOptionsType,
 } from '../../assets/cardSets/Flashcards.type'
 import { FlashcardsLayout } from './Flashcards.layout'
 
 export const FlashcardsRunner = ({
   lang,
+  cards,
 }: {
-  lang: FlashcardsLanguageCode
+  lang: LanguageOptionsType
+  cards: FlashCardsType[]
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0)
+  const selectedLanguage = lang === 'ALL' ? [...LANGUAGE_CODE] : [lang]
 
   const handleResolve = () => {
     // const card = FlashcardsAll[currentIndex]
@@ -21,12 +25,12 @@ export const FlashcardsRunner = ({
     // })
   }
 
-  if (currentIndex >= FlashcardsAll.length) return null
+  if (currentIndex >= cardsHumanRelation.length) return null
 
   const visible = [
-    { card: FlashcardsAll[currentIndex], isFront: true },
-    FlashcardsAll[currentIndex + 1] && {
-      card: FlashcardsAll[currentIndex + 1],
+    { card: cards[currentIndex], isFront: true },
+    cards[currentIndex + 1] && {
+      card: cards[currentIndex + 1],
       isFront: false,
     },
   ].filter(Boolean) as { card: FlashCardsType; isFront: boolean }[]
@@ -38,7 +42,7 @@ export const FlashcardsRunner = ({
           key={card.id}
           flashcard={card}
           isFront={isFront}
-          lang={lang}
+          langCode={selectedLanguage}
           onResolve={isFront ? handleResolve : () => {}}
         />
       ))}
