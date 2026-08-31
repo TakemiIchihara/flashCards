@@ -1,4 +1,4 @@
-import { LANGUAGE_OPTIONS } from '@/assets/cardSets/Flashcards.type'
+import { LANGUAGE_OPTIONS } from '@/assets/Flashcards/Flashcards.type'
 import { HomeLayout } from './Home.layout'
 
 export const Home = () => {

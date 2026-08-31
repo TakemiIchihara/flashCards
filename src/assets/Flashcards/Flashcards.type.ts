@@ -1,24 +1,23 @@
 // when you want to create a type using the content of an array, define the array first and turn it into a type
-export const LANGUAGE_CODE = ['DE', 'CN'] as const
-export type FlashcardsLanguageCode = (typeof LANGUAGE_CODE)[number]
-
-export const LANGUAGE_OPTIONS = [...LANGUAGE_CODE, 'ALL'] as const
-export type LanguageOptionsType = (typeof LANGUAGE_OPTIONS)[number]
+export const LANGUAGE_CODES = ['DE', 'CN', 'UA'] as const
+export type LanguageCodesType = (typeof LANGUAGE_CODES)[number]
 
 export type FlashCardsType = {
   id: string
   word: string
-  translations: TranslationsType
-  pinyin?: string
+  translations: {
+    DE?: string
+    CN?: string
+    JP?: string
+    UA?: string
+  }
+  pronunciation: Partial<Record<LanguageCodesType, string>>
   tag: string
   masteryLevel: MasteryLevel
 }
 
-type TranslationsType = {
-  DE?: string
-  CN?: string
-  JP?: string
-}
+export const LANGUAGE_OPTIONS = [...LANGUAGE_CODES, 'ALL'] as const
+export type LanguageOptionsType = (typeof LANGUAGE_OPTIONS)[number]
 
 export const CATEGORIES = {
   Greeting: 'greeting',

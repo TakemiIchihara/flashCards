@@ -1,7 +1,7 @@
 import type {
-  FlashcardsLanguageCode,
+  LanguageCodesType,
   FlashCardsType,
-} from '../../assets/cardSets/Flashcards.type'
+} from '../../assets/Flashcards/Flashcards.type'
 
 import { useRef, useState } from 'react'
 
@@ -14,7 +14,7 @@ gsap.registerPlugin(useGSAP, Draggable)
 
 type LayoutProps = {
   flashcard: FlashCardsType
-  langCode: FlashcardsLanguageCode[]
+  langCode: LanguageCodesType[]
   isFront: boolean
   onResolve: (change: MLChange) => void // ML as in Mastery Level
 }
@@ -143,18 +143,23 @@ export const FlashcardsLayout = ({
         >
           {langCode.map((code) => (
             <>
-              {code === 'CN' && (
-                <small className="text-yellow-900">{flashcard.pinyin}</small>
+              {code in flashcard.pronunciation && (
+                <small className="text-yellow-900">
+                  {flashcard.pronunciation?.[code]}
+                </small>
               )}
               <h2 className="text-4xl font-extrabold text-amber-950">
                 {flashcard.translations[code]}
               </h2>
               <div>
                 <button
-                  onClick={() => speak(flashcard.translations[code], code)}
-                  className="cursor-pointer"
+                  className="flex cursor-pointer flex-col items-center justify-center rounded-4xl border border-solid border-violet-400 px-4 py-2"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    speak(flashcard.translations[code], code)
+                  }}
                 >
-                  pronounce 🗣️
+                  <span className="block -translate-y-px">pronounce 🗣️</span>
                 </button>
               </div>
             </>

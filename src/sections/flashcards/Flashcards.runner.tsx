@@ -1,11 +1,11 @@
 import { useState } from 'react'
-import { cardsHumanRelation } from '@/assets/cardSets/Flashcards.humanRelation'
 import {
-  LANGUAGE_CODE,
+  LANGUAGE_CODES,
   type FlashCardsType,
   type LanguageOptionsType,
-} from '../../assets/cardSets/Flashcards.type'
+} from '../../assets/Flashcards/Flashcards.type'
 import { FlashcardsLayout } from './Flashcards.layout'
+import { Link } from 'react-router-dom'
 
 export const FlashcardsRunner = ({
   lang,
@@ -15,7 +15,7 @@ export const FlashcardsRunner = ({
   cards: FlashCardsType[]
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0)
-  const selectedLanguage = lang === 'ALL' ? [...LANGUAGE_CODE] : [lang]
+  const selectedLanguage = lang === 'ALL' ? [...LANGUAGE_CODES] : [lang]
 
   const handleResolve = () => {
     // const card = FlashcardsAll[currentIndex]
@@ -25,7 +25,13 @@ export const FlashcardsRunner = ({
     // })
   }
 
-  if (currentIndex >= cardsHumanRelation.length) return null
+  if (currentIndex >= cards.length)
+    return (
+      <div className="align-center flex h-full w-full flex-col justify-center gap-4">
+        <h2>No More Cards :)</h2>
+        <Link to={'/'}>Go back to HOME</Link>
+      </div>
+    )
 
   const visible = [
     { card: cards[currentIndex], isFront: true },

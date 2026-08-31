@@ -1,8 +1,7 @@
-import { humanRelation } from './Flashcards.humanRelation'
-import { fruits } from './Flashcards.Fruits'
 import { slugify } from '@/utils/slugify'
+import * as CardSets from './cardsets/index'
 
-export const FLASHCARDS = { humanRelation, fruits } as const
+export const FLASHCARDS = { ...CardSets } as const
 
 export type CategoryType = keyof typeof FLASHCARDS
 

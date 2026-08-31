@@ -2,12 +2,12 @@ import { FlashcardsRunner } from './sections/flashcards/Flashcards.runner'
 import { NavBar } from './layout/NavBar/NavBar'
 import { Route, Routes } from 'react-router-dom'
 import { Home } from './sections/home/Home'
-import { LANGUAGE_OPTIONS } from './assets/cardSets/Flashcards.type'
+import { LANGUAGE_OPTIONS } from './assets/Flashcards/Flashcards.type'
 import {
   FLASHCARDS,
   matchCategory,
   type CategoryType,
-} from './assets/cardSets/Flashcards.registry'
+} from './assets/Flashcards/Flashcards.registry'
 
 function App() {
   return (

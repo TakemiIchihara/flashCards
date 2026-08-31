@@ -1,0 +1,6 @@
+export { fruits } from './fruits'
+export { humanRelation } from './humanRelation'
+export { numbers } from './numbers'
+export { bodyMovements } from './bodyMovements'
+export { usefulPhrases } from './usefulPhrases'
+export { facialExpression } from './facialExpression'
