@@ -25,6 +25,14 @@ export const HomeLayout = ({ lang }: { lang: LanguageOptionsType }) => {
             {category}
           </Link>
         ))}
+        {lang === 'UA' && (
+          <Link
+            className="w-fit rounded-full border border-solid border-violet-500 px-10 py-4 text-center text-2xl"
+            to={'/flashcards-UA/alphabets'}
+          >
+            Alphabets
+          </Link>
+        )}
       </div>
     </div>
   )
