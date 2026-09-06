@@ -9,7 +9,7 @@ export const Home = () => {
       {LANGUAGE_OPTIONS.map((lang) => (
         <section
           key={lang}
-          className="h-dvh w-screen shrink-0 snap-end overflow-hidden"
+          className="h-fit w-screen shrink-0 snap-end overflow-hidden"
         >
           <HomeLayout lang={lang} />
         </section>

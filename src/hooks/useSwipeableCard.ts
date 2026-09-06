@@ -33,7 +33,6 @@ export const useSwipeableCard = ({
     // To do this without deconstruction, it would be another line with const instance = AllInstances[0]
     const [instance] = Draggable.create(cardRef.current, {
       type: 'x,y',
-      inertia: true,
       onDrag: function () {
         const tilt = gsap.utils.clamp(-10, 10, this.x * 0.05)
         gsap.set(cardRef.current, { rotate: tilt })

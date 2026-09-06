@@ -2,7 +2,17 @@
 export const LANGUAGE_CODES = ['DE', 'CN', 'UA'] as const
 export type LanguageCodesType = (typeof LANGUAGE_CODES)[number]
 
-export type FlashCardsType = {
+// type WithoutId<T extends WordCardProps | A = Omit<T, 'id'>
+
+export type FlashCardsType<
+  T extends StringCardProps | CharCardProps = StringCardProps,
+> = {
+  name: string
+  id: string
+  cards: Omit<T, 'id'>[]
+}
+
+export type StringCardProps = {
   id: string
   word: string
   translations: {
@@ -14,6 +24,34 @@ export type FlashCardsType = {
   pronunciation: Partial<Record<LanguageCodesType, string>>
   tag: string
   masteryLevel: MasteryLevel
+}
+
+export interface CharCardProps {
+  id: string
+  word: string
+  head: string
+  tail: {
+    romanization: string
+    examples: {
+      word: string
+      romanized: string
+      translation: string
+    }[]
+  }
+}
+
+export type StringDeck = FlashCardsType<StringCardProps>
+export type CharDeck = FlashCardsType<CharCardProps>
+
+export type HydratedStringDeck = {
+  name: string
+  id: string
+  cards: StringCardProps[]
+}
+export type HydratedCharDeck = {
+  name: string
+  id: string
+  cards: CharCardProps[]
 }
 
 export const LANGUAGE_OPTIONS = [...LANGUAGE_CODES, 'ALL'] as const

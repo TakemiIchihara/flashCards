@@ -8,7 +8,7 @@ import {
   matchCategory,
   type CategoryType,
 } from './assets/Flashcards/Flashcards.registry'
-import { uaAlphabets } from './assets/UkranianChar/uaAlphabets'
+import { uaAlphabets } from './assets/Flashcards/cardsets/characters/uaAlphabets'
 
 function App() {
   return (

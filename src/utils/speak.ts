@@ -11,11 +11,21 @@ const speechLanguageMap: Partial<
 }
 export const speak = async (
   word: string | undefined,
-  speechLang: LanguageCodesType
+  speechLang: LanguageCodesType,
+  onStart?: () => void,
+  onEnd?: () => void
 ) => {
   if (!word) return
 
+  if ('audioSession' in navigator) {
+    ;(
+      navigator as unknown as { audioSession: { type: string } }
+    ).audioSession.type = 'ambient'
+  }
+
   const voice = speechLanguageMap[speechLang]
+
+  onStart?.()
 
   try {
     const response = await fetch(
@@ -31,7 +41,7 @@ export const speak = async (
           },
           audioConfig: {
             audioEncoding: 'MP3',
-            speakingRate: 1,
+            speakingRate: 0.8,
           },
         }),
       }
@@ -45,23 +55,15 @@ export const speak = async (
     }
 
     const audio = new Audio(`data:audio/MP3;base64,${data.audioContent}`)
-    audio.play()
+
+    await new Promise<void>((resolve) => {
+      audio.onended = () => resolve()
+      audio.onerror = () => resolve()
+      audio.play()
+    })
   } catch (err) {
     console.error('Failed to fetch speech: ', err)
+  } finally {
+    onEnd?.()
   }
-
-  // const speechLanguage = {
-  //   DE: 'de-DE',
-  //   CN: 'zh-CN',
-  //   UA: 'uk-UA',
-  // }[speechLang]
-  // // satisfies Partial<
-  // //   Record<FlashcardsLanguageCode, (typeof speechLanguageCode)[number][]>>
-
-  // const utterance = new SpeechSynthesisUtterance(word)
-  // utterance.lang = speechLanguage
-  // utterance.rate = 0.8
-
-  // window.speechSynthesis.cancel()
-  // window.speechSynthesis.speak(utterance)
 }

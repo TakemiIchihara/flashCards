@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import {
   LANGUAGE_CODES,
-  type FlashCardsType,
+  type HydratedCharDeck,
+  type HydratedStringDeck,
   type LanguageOptionsType,
 } from '../../assets/Flashcards/Flashcards.type'
 import { FlashcardsLayout } from './Flashcards.layout'
 import { Link } from 'react-router-dom'
-import type { AlphabetCard } from '@/assets/UkranianChar/uaAlphabets'
 import { FlashcardsAlphabets } from './Flashcards.uaChars'
 
 type FlashcardsRunnerProps =
   | {
       variant: 'flashcards'
       lang: LanguageOptionsType
-      cards: FlashCardsType[]
+      cards: HydratedStringDeck
     }
-  | { variant: 'alphabets'; lang: LanguageOptionsType; cards: AlphabetCard[] }
+  | { variant: 'alphabets'; lang: LanguageOptionsType; cards: HydratedCharDeck }
 
 function getVisible<T extends { id: string }>(
   cards: T[],
@@ -45,10 +45,10 @@ export const FlashcardsRunner = (props: FlashcardsRunnerProps) => {
 
   console.log(
     '[Flashcards.runner] This is how the Alphabet cards look like: ',
-    props.cards
+    props
   )
 
-  if (currentIndex >= props.cards.length)
+  if (currentIndex >= props.cards.cards.length)
     return (
       <div className="align-center flex h-full w-full flex-col justify-center gap-4">
         <h2>No More Cards :)</h2>
@@ -57,26 +57,30 @@ export const FlashcardsRunner = (props: FlashcardsRunnerProps) => {
     )
 
   return (
-    <div className="relative flex h-dvh flex-col items-center justify-center">
+    <div className="relative flex h-dvh flex-col items-center justify-end pb-10 md:justify-center">
       {props.variant === 'flashcards'
-        ? getVisible(props.cards, currentIndex).map(({ card, isFront }) => (
-            <FlashcardsLayout
-              key={card.id}
-              flashcard={card}
-              isFront={isFront}
-              langCode={selectedLanguage}
-              onResolve={isFront ? handleResolve : () => {}}
-            />
-          ))
-        : getVisible(props.cards, currentIndex).map(({ card, isFront }) => (
-            <FlashcardsAlphabets
-              key={card.id}
-              flashcard={card}
-              isFront={isFront}
-              langCode={selectedLanguage}
-              onResolve={isFront ? handleResolve : () => {}}
-            />
-          ))}
+        ? getVisible(props.cards.cards, currentIndex).map(
+            ({ card, isFront }) => (
+              <FlashcardsLayout
+                key={card.id}
+                flashcard={card}
+                isFront={isFront}
+                langCode={selectedLanguage}
+                onResolve={isFront ? handleResolve : () => {}}
+              />
+            )
+          )
+        : getVisible(props.cards.cards, currentIndex).map(
+            ({ card, isFront }) => (
+              <FlashcardsAlphabets
+                key={card.id}
+                flashcard={card}
+                isFront={isFront}
+                langCode={selectedLanguage}
+                onResolve={isFront ? handleResolve : () => {}}
+              />
+            )
+          )}
     </div>
   )
 }

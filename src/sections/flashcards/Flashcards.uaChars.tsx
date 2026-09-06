@@ -1,10 +1,13 @@
-import type { LanguageCodesType } from '@/assets/Flashcards/Flashcards.type'
-import type { AlphabetCard } from '@/assets/UkranianChar/uaAlphabets'
+import type {
+  CharCardProps,
+  LanguageCodesType,
+} from '@/assets/Flashcards/Flashcards.type'
 import { useSwipeableCard, type MLChange } from '@/hooks/useSwipeableCard'
 import { speak } from '@/utils/speak'
+import { useState } from 'react'
 
 type FlashcardLayoutProps = {
-  flashcard: AlphabetCard
+  flashcard: CharCardProps
   isFront: boolean
   langCode: LanguageCodesType[]
   onResolve: (change: MLChange) => void
@@ -13,13 +16,13 @@ type FlashcardLayoutProps = {
 export const FlashcardsAlphabets = ({
   flashcard,
   isFront,
-  // langCode,
   onResolve,
 }: FlashcardLayoutProps) => {
   const { containerRef, cardRef, handleFlip } = useSwipeableCard({
     isFront,
     onResolve,
   })
+  const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
 
   return (
     <div
@@ -51,15 +54,25 @@ export const FlashcardsAlphabets = ({
             transform: 'rotateY(180deg)',
           }}
         >
-          <h2 className="text-4xl font-extrabold text-amber-950">
+          <h2 className="text-5xl font-extrabold text-amber-950">
             {flashcard.tail.romanization}
           </h2>
           <div>
             <button
               className="flex cursor-pointer flex-col items-center justify-center rounded-4xl border border-solid border-violet-400 px-4 py-2"
+              style={{
+                background: !isSpeaking ? 'aliceblue' : 'cornflowerblue',
+                color: !isSpeaking ? 'cornflowerblue' : 'aliceblue',
+              }}
+              disabled={isSpeaking}
               onClick={(e) => {
                 e.stopPropagation()
-                speak(flashcard.head, 'UA')
+                speak(
+                  flashcard.head,
+                  'UA',
+                  () => setIsSpeaking(true),
+                  () => setIsSpeaking(false)
+                )
               }}
             >
               <span className="block -translate-y-px">pronounce 🗣️</span>
@@ -69,14 +82,26 @@ export const FlashcardsAlphabets = ({
             {flashcard.tail.examples.map((ex) => (
               <div>
                 <small>{ex.romanized}</small>
-                <p>{ex.word}</p>
+                <p className="text-5xl font-extrabold text-amber-950">
+                  {ex.word}
+                </p>
                 <p>{ex.translation}</p>
                 <div>
                   <button
                     className="flex cursor-pointer flex-col items-center justify-center rounded-4xl border border-solid border-violet-400 px-4 py-2"
+                    style={{
+                      background: !isSpeaking ? 'aliceblue' : 'cornflowerblue',
+                      color: !isSpeaking ? 'cornflowerblue' : 'aliceblue',
+                    }}
+                    disabled={isSpeaking}
                     onClick={(e) => {
                       e.stopPropagation()
-                      speak(ex.word, 'UA')
+                      speak(
+                        ex.word,
+                        'UA',
+                        () => setIsSpeaking(true),
+                        () => setIsSpeaking(false)
+                      )
                     }}
                   >
                     <span className="block -translate-y-px">pronounce 🗣️</span>
