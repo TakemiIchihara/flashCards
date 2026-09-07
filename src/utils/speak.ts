@@ -41,7 +41,7 @@ export const speak = async (
           },
           audioConfig: {
             audioEncoding: 'MP3',
-            speakingRate: 0.8,
+            speakingRate: 0.9,
           },
         }),
       }

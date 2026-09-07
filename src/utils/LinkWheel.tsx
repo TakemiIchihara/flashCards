@@ -43,10 +43,12 @@ export const LinkWheel = ({
         gsap.to(el, {
           scale: 1 - ratio * 0.18,
           autoAlpha:
-            dist < ITEM_HEIGHT / 2 ? Math.max(1 - ratio * 0.4, 0.15) : 0,
+            dist < ITEM_HEIGHT * 2 + ITEM_HEIGHT / 2
+              ? Math.max(1 - ratio * 0.4, 0.15)
+              : 0,
           filter: `blur(${Math.pow(ratio, 1.5) * 1.5}px)`,
           x: ratio * (ratio / 2) * 60,
-          duration: 0.08,
+          duration: 0.16,
           overwrite: 'auto',
         })
 
