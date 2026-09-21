@@ -18,10 +18,20 @@ const LANGUAGE_LIST = {
     titleColor: '#FFFFFF',
     bgColor: ['#DE2910', '#FFDE00'],
   },
+  IT: {
+    title: 'Italian',
+    titleColor: '#FFFFFF',
+    bgColor: ['#CD002A', '#F4F9FF', '#008C45'],
+  },
   UA: {
     title: 'Ukrainian',
     titleColor: '#FFFFFF',
     bgColor: ['#0057B7', '#FFDD00'],
+  },
+  KR: {
+    title: 'Korean',
+    titleColor: '#FFFFFF',
+    bgColor: ['#CD2E3A', '#0F64CD', '#FFFFFF'],
   },
   ALL: {
     title: 'GCU',

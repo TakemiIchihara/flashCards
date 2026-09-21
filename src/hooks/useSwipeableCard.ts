@@ -3,6 +3,8 @@ import { useRef, useState } from 'react'
 import gsap from 'gsap'
 import { useGSAP } from '@gsap/react'
 import { Draggable } from 'gsap/Draggable'
+import { createTailAnimationWord } from '@/sections/flashcards/tailLayout/tailLayoutAnimation'
+import type { CardKinds } from '@/assets/Flashcards/Flashcards.type'
 
 gsap.registerPlugin(useGSAP, Draggable)
 
@@ -14,12 +16,15 @@ const SWIP_THLESHOLD_Y = 100
 export const useSwipeableCard = ({
   isFront,
   onResolve,
+  flashcardKind,
 }: {
   isFront: boolean
   onResolve: (change: MLChange) => void // ML as in Mastery Level
+  flashcardKind: CardKinds
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const cardRef = useRef<HTMLDivElement>(null)
+  const tailRef = useRef<HTMLDivElement>(null)
   const draggableRef = useRef<Draggable | null>(null)
   const onResolveRef = useRef(onResolve)
   const [isFlipped, setIsFlipped] = useState<boolean>(false)
@@ -91,11 +96,14 @@ export const useSwipeableCard = ({
       rotationY: isFlipped ? 0 : 180,
       duration: 0.5,
       ease: 'power2.out',
-      onComplete: () => draggableRef.current?.enable(),
+      onComplete: () => {
+        draggableRef.current?.enable()
+      },
     })
+    if (flashcardKind === 'word') createTailAnimationWord(tailRef.current!)
 
     setIsFlipped(!isFlipped)
   })
 
-  return { containerRef, cardRef, isFlipped, handleFlip }
+  return { containerRef, cardRef, tailRef, isFlipped, handleFlip }
 }

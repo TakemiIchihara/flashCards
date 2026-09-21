@@ -1,9 +1,13 @@
 import { slugify } from '@/utils/slugify'
-import type { CharDeck, HydratedCharDeck } from '../../Flashcards.type'
+import type {
+  FlashcardsType,
+  HydratedFlashcardsType,
+} from '../../Flashcards.type'
 
-const uaAlphabetCardSets: CharDeck = {
+const uaAlphabetCardSets: FlashcardsType<'char'> = {
   name: 'Alphabets',
   id: 'uaAlphabets',
+  kind: 'char',
   cards: [
     {
       word: 'А',
@@ -375,10 +379,10 @@ const uaAlphabetCardSets: CharDeck = {
   ],
 }
 
-export const uaAlphabets: HydratedCharDeck = {
+export const uaAlphabets: HydratedFlashcardsType<'char'> = {
   ...uaAlphabetCardSets,
   cards: uaAlphabetCardSets.cards.map((card, i) => ({
     ...card,
-    id: slugify(card.tail.romanization + i),
+    id: slugify(card.tail.romanization) + i,
   })),
 }

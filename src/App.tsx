@@ -8,7 +8,7 @@ import {
   matchCategory,
   type CategoryType,
 } from './assets/Flashcards/Flashcards.registry'
-import { uaAlphabets } from './assets/Flashcards/cardsets/characters/uaAlphabets'
+import { uaAlphabets } from './assets/Flashcards/cardsets/chars/uaAlphabets'
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
                 path={`/flashcards-${lang}/${category}`}
                 element={
                   <FlashcardsRunner
-                    variant="flashcards"
+                    kind="word"
                     lang={`${lang}`}
                     cards={matchCategory(category)}
                   />
@@ -35,11 +35,7 @@ function App() {
           <Route
             path="/flashcards-UA/alphabets"
             element={
-              <FlashcardsRunner
-                variant="alphabets"
-                lang="UA"
-                cards={uaAlphabets}
-              />
+              <FlashcardsRunner kind="char" lang="UA" cards={uaAlphabets} />
             }
           />
         </Routes>

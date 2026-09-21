@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import {
   LANGUAGE_CODES,
-  type HydratedCharDeck,
-  type HydratedStringDeck,
+  type CardKinds,
+  type HydratedFlashcardsType,
   type LanguageOptionsType,
 } from '../../assets/Flashcards/Flashcards.type'
-import { FlashcardsLayout } from './Flashcards.layout'
+import {
+  FlashcardsLayout,
+  type FlashcardsLayoutProps,
+} from './Flashcards.layout'
 import { Link } from 'react-router-dom'
-import { FlashcardsAlphabets } from './Flashcards.uaChars'
 
-type FlashcardsRunnerProps =
-  | {
-      variant: 'flashcards'
-      lang: LanguageOptionsType
-      cards: HydratedStringDeck
-    }
-  | { variant: 'alphabets'; lang: LanguageOptionsType; cards: HydratedCharDeck }
+type FlashcardsRunnerProps<K extends CardKinds = CardKinds> = {
+  kind: K
+  lang: LanguageOptionsType
+  cards: HydratedFlashcardsType<K>
+}
 
 function getVisible<T extends { id: string }>(
   cards: T[],
@@ -30,8 +30,10 @@ function getVisible<T extends { id: string }>(
   ].filter(Boolean) as { card: T; isFront: boolean }[]
 }
 
-export const FlashcardsRunner = (props: FlashcardsRunnerProps) => {
-  const { lang } = props
+export const FlashcardsRunner = <K extends CardKinds>(
+  props: FlashcardsRunnerProps<K>
+) => {
+  const { kind, lang } = props
   const [currentIndex, setCurrentIndex] = useState<number>(0)
   const selectedLanguage = lang === 'ALL' ? [...LANGUAGE_CODES] : [lang]
 
@@ -43,11 +45,6 @@ export const FlashcardsRunner = (props: FlashcardsRunnerProps) => {
     // })
   }
 
-  console.log(
-    '[Flashcards.runner] This is how the Alphabet cards look like: ',
-    props
-  )
-
   if (currentIndex >= props.cards.cards.length)
     return (
       <div className="align-center flex h-full w-full flex-col justify-center gap-4">
@@ -56,31 +53,31 @@ export const FlashcardsRunner = (props: FlashcardsRunnerProps) => {
       </div>
     )
 
+  console.log('this is the card set: ', props.cards)
+
   return (
     <div className="relative flex h-dvh flex-col items-center justify-end pb-10 md:justify-center">
-      {props.variant === 'flashcards'
-        ? getVisible(props.cards.cards, currentIndex).map(
-            ({ card, isFront }) => (
-              <FlashcardsLayout
-                key={card.id}
-                flashcard={card}
-                isFront={isFront}
-                langCode={selectedLanguage}
-                onResolve={isFront ? handleResolve : () => {}}
-              />
-            )
-          )
-        : getVisible(props.cards.cards, currentIndex).map(
-            ({ card, isFront }) => (
-              <FlashcardsAlphabets
-                key={card.id}
-                flashcard={card}
-                isFront={isFront}
-                langCode={selectedLanguage}
-                onResolve={isFront ? handleResolve : () => {}}
-              />
-            )
-          )}
+      {getVisible(props.cards.cards, currentIndex).map(({ card, isFront }) => {
+        // safe: `card` comes from HydratedFlashcardsType<K>, so kind and tail are
+        // correlated at runtime; TS can't verify that correlation across a generic K.
+        const layoutProps = {
+          flashcardKind: kind,
+          flashcard: card,
+          isFront: isFront,
+          selectedLanguageCode: selectedLanguage,
+          onResolve: isFront ? handleResolve : () => {},
+        } as FlashcardsLayoutProps
+
+        return (
+          <FlashcardsLayout
+            key={card.id}
+            {...layoutProps}
+            isFront={isFront}
+            selectedLanguageCode={selectedLanguage}
+            onResolve={isFront ? handleResolve : () => {}}
+          />
+        )
+      })}
     </div>
   )
 }

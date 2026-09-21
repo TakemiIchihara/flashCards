@@ -1,29 +1,56 @@
 import { useSwipeableCard, type MLChange } from '@/hooks/useSwipeableCard'
 import type {
   LanguageCodesType,
-  StringCardProps,
+  CardOf,
+  CardKinds,
 } from '../../assets/Flashcards/Flashcards.type'
-import { speak } from '@/utils/speak'
-import { useState } from 'react'
+import { TailLayoutChar } from './tailLayout/TailLayout.Char'
+import { TailLayoutPhrase } from './tailLayout/TailLayout.Phrase'
+import { TailLayoutWord } from './tailLayout/TailLayout.word'
 
-export type FlashcardLayoutProps = {
-  flashcard: StringCardProps
-  isFront: boolean
-  langCode: LanguageCodesType[]
-  onResolve: (change: MLChange) => void
-}
+// discriminated union
+export type FlashcardsLayoutProps = {
+  [K in CardKinds]: {
+    flashcardKind: K
+    flashcard: CardOf<K>
+    isFront: boolean
+    selectedLanguageCode: LanguageCodesType[]
+    onResolve: (change: MLChange) => void
+  }
+}[CardKinds]
 
-export const FlashcardsLayout = ({
-  flashcard,
-  isFront,
-  langCode,
-  onResolve,
-}: FlashcardLayoutProps) => {
-  const { containerRef, cardRef, handleFlip } = useSwipeableCard({
+export const FlashcardsLayout = (props: FlashcardsLayoutProps) => {
+  const { isFront, selectedLanguageCode, onResolve, flashcardKind } = props
+  const { containerRef, cardRef, tailRef, handleFlip } = useSwipeableCard({
     isFront,
     onResolve,
+    flashcardKind,
   })
-  const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
+
+  const renderTail = () =>
+    selectedLanguageCode.map((code) => {
+      switch (props.flashcardKind) {
+        case 'word':
+          return (
+            <TailLayoutWord
+              content={props.flashcard.tail}
+              lang={code}
+              ref={tailRef}
+            />
+          )
+        case 'char':
+          return (
+            <TailLayoutChar
+              char={props.flashcard.head}
+              content={props.flashcard.tail}
+              lang={code}
+              // ref={tailRef}
+            />
+          )
+        case 'phrase':
+          return <TailLayoutPhrase content={props.flashcard.tail} lang={code} />
+      }
+    })
 
   return (
     <div
@@ -46,7 +73,7 @@ export const FlashcardsLayout = ({
           }}
         >
           <h2 className="text-4xl font-normal text-amber-950">
-            {flashcard.word}
+            {props.flashcard.word}
           </h2>
         </div>
 
@@ -58,42 +85,7 @@ export const FlashcardsLayout = ({
             transform: 'rotateY(180deg)',
           }}
         >
-          {langCode.map((code) => (
-            <div className="flex flex-col items-center justify-center gap-2">
-              <div className="flex w-full flex-col items-center px-2 text-center wrap-break-word">
-                {code in flashcard.pronunciation && (
-                  <small className="leading-[90%] text-yellow-900">
-                    {flashcard.pronunciation?.[code]}
-                  </small>
-                )}
-                <h2 className="w-full text-5xl font-extrabold text-amber-950">
-                  {flashcard.translations[code]}
-                </h2>
-              </div>
-
-              <div>
-                <button
-                  className="click: flex cursor-pointer flex-col items-center justify-center rounded-4xl border border-solid border-violet-400 px-4 py-2"
-                  style={{
-                    background: !isSpeaking ? 'aliceblue' : 'cornflowerblue',
-                    color: !isSpeaking ? 'cornflowerblue' : 'aliceblue',
-                  }}
-                  disabled={isSpeaking}
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    speak(
-                      flashcard.translations[code],
-                      code,
-                      () => setIsSpeaking(true),
-                      () => setIsSpeaking(false)
-                    )
-                  }}
-                >
-                  <span className="block -translate-y-px">pronounce 🗣️</span>
-                </button>
-              </div>
-            </div>
-          ))}
+          {renderTail()}
           {/* {card.translations.map((el) => (<h2 className="text-amber-950">{card.translations[el]}</h2>))} */}
         </div>
       </div>
