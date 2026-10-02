@@ -9,6 +9,7 @@ import {
   type CategoryType,
 } from './assets/Flashcards/Flashcards.registry'
 import { uaAlphabets } from './assets/Flashcards/cardsets/chars/uaAlphabets'
+import { VoiceSamples } from '@/VoiceSamples'
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
               <FlashcardsRunner kind="char" lang="UA" cards={uaAlphabets} />
             }
           />
+          <Route path="/voice-samples" element={<VoiceSamples />} />
         </Routes>
       </div>
     </div>

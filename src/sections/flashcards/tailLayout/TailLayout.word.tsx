@@ -17,30 +17,33 @@ export const TailLayoutWord = ({
 }) => {
   const [isSpeaking, setIsSpeaking] = useState<boolean>(false)
   const { pronunciations, translations, examples } = content
+
   return (
     <div
-      className="relative flex h-full w-full flex-col items-center justify-center gap-2 px-4 py-6"
+      className={`relative grid h-full w-full grid-rows-[3rem_1fr] flex-col gap-3 px-6 py-6`}
       ref={ref}
     >
+      {/* box - the target words, optional pronunciation, and a speak button */}
       <div
-        className="flex h-fit w-full flex-col items-center text-center wrap-break-word"
+        className="row-start-1 flex h-fit w-fit items-center justify-center gap-1.5 self-center text-center wrap-break-word"
         data-container
       >
-        <div className="flex flex-col gap-0.5">
+        <div className="flex flex-col gap-0.5" data-flip>
           {lang in pronunciations && (
-            <small className="leading-[90%] text-yellow-900">
+            <small className="leading-[90%] text-yellow-900" data-flip>
               {pronunciations?.[lang]}
             </small>
           )}
-          <div className="w-fit">
-            <h2 className="text-5xl leading-[90%] font-extrabold text-nowrap text-amber-950">
-              {translations[lang]}
-            </h2>
-          </div>
+          <h2
+            className="text-3xl leading-[90%] font-extrabold text-nowrap text-amber-950"
+            data-flip
+          >
+            {translations[lang]}
+          </h2>
         </div>
 
         <button
-          className="click: flex cursor-pointer flex-col items-center justify-center rounded-4xl border border-solid border-violet-400 px-4 py-2"
+          className="mx-auto flex w-fit cursor-pointer flex-col items-center justify-center rounded-4xl border border-solid border-violet-400"
           style={{
             background: !isSpeaking ? 'aliceblue' : 'cornflowerblue',
             color: !isSpeaking ? 'cornflowerblue' : 'aliceblue',
@@ -55,18 +58,22 @@ export const TailLayoutWord = ({
               () => setIsSpeaking(false)
             )
           }}
+          data-flip
         >
-          <span className="block -translate-y-px">pronounce 🗣️</span>
+          <span className="inline-block px-4 py-2">pronounce 🗣️</span>
         </button>
       </div>
 
-      <div className="flex flex-col gap-4" data-container>
+      <div
+        className="row-start-2 flex flex-col gap-4 overflow-y-scroll"
+        data-container
+      >
         {examples[lang]?.map((ex: WordExample, i) => (
           <div key={i} className="text-black">
-            <div className="flex flex-col">
-              <small className="text-sm/[90%]">{ex.romanized}</small>
+            <div className="flex flex-col gap-1">
+              <small className="pl-1 text-sm/[90%]">{ex.romanized}</small>
               <button
-                className="cursor-pointer text-left leading-[90%]"
+                className="w-fit cursor-pointer text-left leading-[90%]"
                 style={{ color: !isSpeaking ? 'aliceblue' : 'cornflowerblue' }}
                 disabled={isSpeaking}
                 onClick={(e) => {
@@ -79,16 +86,21 @@ export const TailLayoutWord = ({
                   )
                 }}
               >
-                <span className="text-3xl font-semibold">{ex.exPhrase}</span>
+                <span className="text-3xl/[100%] font-bold">{ex.exPhrase}</span>
               </button>
             </div>
 
-            <p className="text-2xl">{ex.translation}</p>
-            {ex.usedNewWords.map((word) => (
-              <small>
-                {word.word}: {word.meaning}
-              </small>
-            ))}
+            <p className="mt-2 pl-0.5 text-xl/[100%]">- {ex.translation}</p>
+            <ul className="justify mt-1 flex flex-wrap gap-x-4 gap-y-1 pl-2">
+              {ex.usedNewWords.map((word) => (
+                <li className="text-base/[100%] text-nowrap">
+                  <span className="font-semibold tracking-wide">
+                    {word.word}
+                  </span>
+                  : <span className="tracking-tighter">{word.meaning}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         ))}
       </div>

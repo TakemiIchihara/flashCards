@@ -27,6 +27,7 @@ export const useSwipeableCard = ({
   const tailRef = useRef<HTMLDivElement>(null)
   const draggableRef = useRef<Draggable | null>(null)
   const onResolveRef = useRef(onResolve)
+  const hasAnimated = useRef(false)
   const [isFlipped, setIsFlipped] = useState<boolean>(false)
 
   useGSAP(() => {
@@ -92,15 +93,21 @@ export const useSwipeableCard = ({
 
   const handleFlip = contextSafe(() => {
     if (!isFront) return
+
+    const goingToTail = !isFlipped //only animates when flipping to tail
+
     gsap.to(cardRef.current, {
-      rotationY: isFlipped ? 0 : 180,
+      rotationY: goingToTail ? 180 : 0,
       duration: 0.5,
       ease: 'power2.out',
       onComplete: () => {
         draggableRef.current?.enable()
       },
     })
-    if (flashcardKind === 'word') createTailAnimationWord(tailRef.current!)
+    if (goingToTail && flashcardKind === 'word' && !hasAnimated.current) {
+      hasAnimated.current = true
+      createTailAnimationWord(tailRef.current!)
+    }
 
     setIsFlipped(!isFlipped)
   })

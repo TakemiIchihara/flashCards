@@ -5,9 +5,12 @@ const GOOGLE_TTS_API_KEY = import.meta.env.VITE_GOOGLE_TTS_API_KEY
 const speechLanguageMap: Partial<
   Record<LanguageCodesType, { languageCode: string; name: string }>
 > = {
-  DE: { languageCode: 'de-DE', name: 'de-DE-Chirp3-HD-Puck' },
-  CN: { languageCode: 'cmn-CN', name: 'cmn-CN-Chirp3-HD-Zubenelgenubi' },
+  DE: { languageCode: 'de-DE', name: 'de-DE-Chirp3-HD-Algieba' },
+  CN: { languageCode: 'cmn-CN', name: 'cmn-CN-Chirp3-HD-Iapetus' },
   UA: { languageCode: 'uk-UA', name: 'uk-UA-Chirp3-HD-Alnilam' },
+  IT: { languageCode: 'it-IT', name: 'it-IT-Chirp3-HD-Iapetus' },
+  KR: { languageCode: 'ko-KR', name: 'ko-KR-Chirp3-HD-Iapetus' },
+  JP: { languageCode: 'ja-JP', name: 'ja-JP-Chirp3-HD-Alnilam' },
 }
 export const speak = async (
   word: string | undefined,
